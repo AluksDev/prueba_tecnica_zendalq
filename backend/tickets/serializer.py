@@ -10,6 +10,7 @@ class TicketSerializer(serializers.ModelSerializer):
             "title",
             "description",
             "status",
+            "priority",
             "created_at",
         ]
         read_only_fields = [
