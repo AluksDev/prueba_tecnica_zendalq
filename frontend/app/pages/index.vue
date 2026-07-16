@@ -35,17 +35,18 @@ onMounted(fetchTickets)
   <div>
     <h1>Tickets</h1>
 
-    <!-- <TicketFilters v-model="filters" @change="fetchTickets" />
-    <TicketForm @created="fetchTickets" /> -->
+    <!-- <TicketFilters v-model="filters" @change="fetchTickets" /> -->
+    
+    <TicketForm @created="fetchTickets" /> 
 
     <div v-if="loading">Cargando...</div>
     <div v-else-if="error">{{ error }}</div>
     <div v-else-if="tickets.length === 0">No hay tickets</div>
 
-    <!-- <TicketList
+    <TicketList
       v-else
       :tickets="tickets"
       @update="fetchTickets"
-    /> -->
+    />
   </div>
 </template>
