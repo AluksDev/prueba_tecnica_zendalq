@@ -17,3 +17,8 @@ export interface TicketCreate {
   priority?: TicketPriority
   status?: TicketStatus
 }
+
+export interface TicketStats {
+  status: TicketStatus
+  total: number
+}

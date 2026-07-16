@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Ticket, TicketStatus } from '~/models/ticket'
+import { statusLabels, statusColors, priorityLabels } from '~/helpers/ticket'
 
 const props = defineProps<{ ticket: Ticket }>()
 const emit = defineEmits(['update'])
@@ -8,18 +9,6 @@ const { updateTicket } = useTickets()
 const toast = useToast()
 
 const loading = ref<boolean>(false)
-
-const statusLabels: Record<TicketStatus, string> = {
-  open: 'Abierto',
-  in_progress: 'En progreso',
-  closed: 'Cerrado',
-}
-
-const priorityLabels: Record<string, string> = {
-  low: 'Baja',
-  medium: 'Media',
-  high: 'Alta',
-}
 
 const formatDate = (date: string): string => {
   const d = new Date(date)
@@ -58,7 +47,7 @@ const changeStatus = async () => {
   <div class="ticket-card">
     <div class="ticket-header">
       <h3>{{ ticket.title }}</h3>
-      <span class="ticket-status">{{ statusLabels[ticket.status] }}</span>
+      <span class="ticket-status" :style="{ backgroundColor: statusColors[ticket.status], color: '#fff' }">{{ statusLabels[ticket.status] }}</span>
     </div>
     <p class="ticket-meta">{{ priorityLabels[ticket.priority] }} &middot; {{ formatDate(ticket.created_at) }}</p>
     <button
@@ -92,8 +81,6 @@ const changeStatus = async () => {
   font-weight: 500;
   padding: 2px 8px;
   border-radius: 4px;
-  background-color: var(--bg);
-  color: var(--text-secondary);
 }
 
 .ticket-meta {

@@ -1,11 +1,13 @@
 <script setup lang="ts">
-import type { Ticket } from '~/models/ticket'
+import type { Ticket, TicketStats } from '~/models/ticket'
 
-const { getTickets } = useTickets()
+const { getTickets, getStats } = useTickets()
 const toast = useToast()
 
 const tickets = ref<Ticket[]>([])
+const stats = ref<TicketStats[]>([])
 const loading = ref<boolean>(false)
+const loadingStats = ref<boolean>(false)
 
 const filters = ref({
   status: '',
@@ -28,16 +30,35 @@ const fetchTickets = async () => {
   }
 }
 
-onMounted(fetchTickets)
+const fetchStats = async () => {
+  loadingStats.value = true
+  try {
+    stats.value = await getStats()
+  } catch (e: any) {
+    console.error('Error al cargar las estadísticas', e)
+    toast.error('Error al cargar las estadísticas')
+  } finally {
+    loadingStats.value = false
+  }
+}
+
+const refresh = () => {
+  fetchTickets()
+  fetchStats()
+}
+
+onMounted(refresh)
 </script>
 
 <template>
   <div class="page">
     <h1>Tickets</h1>
 
+    <TicketStats :stats="stats" :loading="loadingStats" />
+
     <div class="layout">
       <div class="main">
-        <TicketFilters v-model="filters" :disabled="loading" @change="fetchTickets" />
+        <TicketFilters v-model="filters" :disabled="loading" @change="refresh" />
 
         <div v-if="loading" class="state">
           <span class="spinner"></span> Cargando...
@@ -47,12 +68,12 @@ onMounted(fetchTickets)
         <TicketList
           v-else
           :tickets="tickets"
-          @update="fetchTickets"
+          @update="refresh"
         />
       </div>
 
       <aside class="sidebar">
-        <TicketForm @created="fetchTickets" />
+        <TicketForm @created="refresh" />
       </aside>
     </div>
   </div>
