@@ -23,7 +23,7 @@ class TicketSerializer(serializers.ModelSerializer):
     def validate_status(self, value):
         if self.instance is None and value == Ticket.Status.CLOSED:
             raise serializers.ValidationError(
-                "New tickets cannot start closed."
+                "No se puede crear un ticket con estado cerrado."
             )
         return value
 
@@ -34,7 +34,7 @@ class TicketSerializer(serializers.ModelSerializer):
             if old_status == Ticket.Status.CLOSED and new_status == Ticket.Status.OPEN:
                 raise serializers.ValidationError(
                     {
-                        "status": "Closed tickets cannot be reopened."
+                        "status": "Un ticket cerrado no puede volver a abierto directamente."
                     }
                 )
         return data

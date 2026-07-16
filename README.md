@@ -66,7 +66,7 @@ Esto levanta ambos servicios. No debería hacer falta ningún paso adicional.
 - **Composable `useApi`** centraliza todas las llamadas a la API, manejo de errores y permite añadir interceptores en el futuro sin tocar cada componente.
 - **Interfaces TypeScript en `models/`.** Tipado fuerte, reutilizable entre composables, componentes y páginas.
 - **Proxy de Vite** para redirigir `/api` al backend. Evita CORS en desarrollo y refleja la arquitectura real (reverse proxy en producción). Configurable via `NUXT_API_PROXY_TARGET` para funcionar en local y en Docker.
-- **Mapa de transiciones en el frontend** que refleja las reglas de negocio del backend. Reduce llamadas innecesarias a la API, aunque el backend siempre valida.
+- **`<select>` para cambiar estado** Permite al usuario intentar cualquier transición, demostrando el flujo completo de validación: el frontend envía la petición, el backend rechaza transiciones inválidas y el usuario ve el error en un toast. Esto demuestra que la validación de negocio está correctamente implementada en ambos extremos.
 - **Helpers compartidos** (`helpers/ticket.ts`) para labels y colores, evitando duplicación entre componentes.
 
 **Docker:**

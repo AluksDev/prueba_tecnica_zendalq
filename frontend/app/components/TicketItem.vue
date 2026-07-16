@@ -9,6 +9,11 @@ const { updateTicket } = useTickets()
 const toast = useToast()
 
 const loading = ref<boolean>(false)
+const localStatus = ref<TicketStatus>(props.ticket.status)
+
+watch(() => props.ticket.status, (newStatus) => {
+  localStatus.value = newStatus
+})
 
 const formatDate = (date: string): string => {
   const d = new Date(date)
@@ -20,23 +25,19 @@ const formatDate = (date: string): string => {
   return `${day}/${month}/${year} - ${hours}:${minutes}`
 }
 
-const changeStatus = async () => {
+const changeStatus = async (e: Event) => {
+  const newStatus = (e.target as HTMLSelectElement).value as TicketStatus
+  const previousStatus = props.ticket.status
+
   loading.value = true
   try {
-    const nextStatusMap: Record<TicketStatus, TicketStatus> = {
-      open: 'in_progress',
-      in_progress: 'closed',
-      closed: 'in_progress',
-    }
-
-    const next = (nextStatusMap[props.ticket.status] || 'open') as TicketStatus
-
-    await updateTicket(props.ticket.id, { status: next })
+    await updateTicket(props.ticket.id, { status: newStatus })
     toast.success('Estado actualizado')
     emit('update')
   } catch (e: any) {
-    console.error('Error al actualizar el estado', e)
-    toast.error(e.data?.detail || 'Error al actualizar el estado')
+    console.error('Error al cambiar el estado', e)
+    toast.error(e.status?.[0] || 'Error al cambiar el estado')
+    localStatus.value = previousStatus
   } finally {
     loading.value = false
   }
@@ -50,14 +51,11 @@ const changeStatus = async () => {
       <span class="ticket-status" :style="{ backgroundColor: statusColors[ticket.status], color: '#fff' }">{{ statusLabels[ticket.status] }}</span>
     </div>
     <p class="ticket-meta">{{ priorityLabels[ticket.priority] }} &middot; {{ formatDate(ticket.created_at) }}</p>
-    <button
-      class="btn-secondary"
-      @click="changeStatus"
-      :disabled="loading"
-    >
-      <span v-if="loading" class="spinner spinner--sm"></span>
-      {{ loading ? 'Actualizando...' : 'Cambiar estado' }}
-    </button>
+    <select v-model="localStatus" @change="changeStatus" :disabled="loading">
+      <option v-for="(label, value) in statusLabels" :key="value" :value="value">
+        {{ label }}
+      </option>
+    </select>
   </div>
 </template>
 
@@ -89,13 +87,5 @@ const changeStatus = async () => {
   margin-bottom: 12px;
 }
 
-.btn-secondary {
-  background-color: var(--bg);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
 
-.btn-secondary:hover {
-  background-color: var(--border);
-}
 </style>
