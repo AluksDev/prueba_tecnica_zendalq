@@ -4,7 +4,7 @@ Aplicación mínima de gestión de incidencias (tickets) construida con Django R
 
 ## Stack
 
-- **Backend:** Django 6 + Django REST Framework, Poetry, SQLite
+- **Backend:** Django 6 + Django REST Framework, Poetry, PostgreSQL
 - **Frontend:** Nuxt 4, Vue 3, pnpm
 - **Infra:** Docker Compose
 
