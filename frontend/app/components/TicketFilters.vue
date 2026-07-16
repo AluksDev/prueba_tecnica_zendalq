@@ -6,7 +6,7 @@ interface TicketFilterModel {
   priority: string
 }
 
-const model = defineModel<TicketFilterModel>()
+const model = defineModel<TicketFilterModel>({ default: () => ({ status: '', priority: '' }) })
 const props = defineProps<{ disabled?: boolean }>()
 const emit = defineEmits(['change'])
 
@@ -15,14 +15,14 @@ watch(model, () => emit('change'), { deep: true })
 
 <template>
   <div class="filters">
-    <select v-model="model?.status" :disabled="disabled">
+    <select v-model="model.status" :disabled="disabled">
       <option value="">Todos los estados</option>
       <option v-for="opt in statusOptions" :key="opt.value" :value="opt.value">
         {{ opt.label }}
       </option>
     </select>
 
-    <select v-model="model?.priority" :disabled="disabled">
+    <select v-model="model.priority" :disabled="disabled">
       <option value="">Todas las prioridades</option>
       <option v-for="opt in priorityOptions" :key="opt.value" :value="opt.value">
         {{ opt.label }}
