@@ -9,6 +9,18 @@ const toast = useToast()
 
 const loading = ref<boolean>(false)
 
+const statusLabels: Record<TicketStatus, string> = {
+  open: 'Abierto',
+  in_progress: 'En progreso',
+  closed: 'Cerrado',
+}
+
+const priorityLabels: Record<string, string> = {
+  low: 'Baja',
+  medium: 'Media',
+  high: 'Alta',
+}
+
 const formatDate = (date: string): string => {
   const d = new Date(date)
   const day = String(d.getDate()).padStart(2, '0')
@@ -46,9 +58,9 @@ const changeStatus = async () => {
   <div class="ticket-card">
     <div class="ticket-header">
       <h3>{{ ticket.title }}</h3>
-      <span class="ticket-status">{{ ticket.status }}</span>
+      <span class="ticket-status">{{ statusLabels[ticket.status] }}</span>
     </div>
-    <p class="ticket-meta">{{ ticket.priority }} &middot; {{ formatDate(ticket.created_at) }}</p>
+    <p class="ticket-meta">{{ priorityLabels[ticket.priority] }} &middot; {{ formatDate(ticket.created_at) }}</p>
     <button
       class="btn-secondary"
       @click="changeStatus"
