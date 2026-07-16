@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import type { Ticket } from '~/models/ticket'
 
-const { getTickets, createTicket, updateTicket } = useTickets()
+const { getTickets } = useTickets()
+const toast = useToast()
 
 const tickets = ref<Ticket[]>([])
 const loading = ref<boolean>(false)
-const error = ref<string | null>(null)
 
 const filters = ref({
   status: '',
@@ -14,7 +14,6 @@ const filters = ref({
 
 const fetchTickets = async () => {
   loading.value = true
-  error.value = null
 
   try {
     const params: Record<string, string> = {}
@@ -22,7 +21,8 @@ const fetchTickets = async () => {
     if (filters.value.priority) params.priority = filters.value.priority
     tickets.value = await getTickets(params)
   } catch (e: any) {
-    error.value = e.data || 'Error al cargar los tickets'
+    console.error('Error al cargar los tickets', e)
+    toast.error('Error al cargar los tickets')
   } finally {
     loading.value = false
   }
@@ -32,21 +32,58 @@ onMounted(fetchTickets)
 </script>
 
 <template>
-  <div>
+  <div class="page">
     <h1>Tickets</h1>
 
-    <TicketFilters v-model="filters" @change="fetchTickets" />
-    
-    <TicketForm @created="fetchTickets" /> 
+    <div class="layout">
+      <div class="main">
+        <TicketFilters v-model="filters" :disabled="loading" @change="fetchTickets" />
 
-    <div v-if="loading">Cargando...</div>
-    <div v-else-if="error">{{ error }}</div>
-    <div v-else-if="tickets.length === 0">No hay tickets</div>
+        <div v-if="loading" class="state">
+          <span class="spinner"></span> Cargando...
+        </div>
+        <div v-else-if="tickets.length === 0" class="state">No hay tickets</div>
 
-    <TicketList
-      v-else
-      :tickets="tickets"
-      @update="fetchTickets"
-    />
+        <TicketList
+          v-else
+          :tickets="tickets"
+          @update="fetchTickets"
+        />
+      </div>
+
+      <aside class="sidebar">
+        <TicketForm @created="fetchTickets" />
+      </aside>
+    </div>
   </div>
 </template>
+
+<style scoped>
+.page h1 {
+  margin-bottom: var(--spacing);
+}
+
+.layout {
+  display: flex;
+  gap: 24px;
+  align-items: flex-start;
+}
+
+.main {
+  flex: 1;
+  min-width: 0;
+}
+
+.sidebar {
+  width: 320px;
+  flex-shrink: 0;
+  position: sticky;
+  top: 32px;
+}
+
+.state {
+  text-align: center;
+  color: var(--text-secondary);
+  padding: 32px 0;
+}
+</style>
