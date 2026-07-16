@@ -17,3 +17,6 @@ export const priorityLabels: Record<TicketPriority, string> = {
   medium: 'Media',
   high: 'Alta',
 }
+
+export const statusOptions = Object.entries(statusLabels).map(([value, label]) => ({ value, label }))
+export const priorityOptions = Object.entries(priorityLabels).map(([value, label]) => ({ value, label }))

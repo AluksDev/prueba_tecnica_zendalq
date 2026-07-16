@@ -56,7 +56,7 @@ Esto levanta ambos servicios. No debería hacer falta ningún paso adicional.
 **Backend:**
 
 - **`TextChoices` para choice fields.** Garantiza valores válidos y permite referenciarlos como constantes (`Ticket.Status.OPEN`) en lugar de strings mágicos, mejorando legibilidad y mantenibilidad.
-- **Campos explícitos en el serializer** en vez de `__all__`. Control total sobre qué expone la API; `id` y `created_at` marcados como `read_only`.
+- **Campos explícitos en el serializer** en vez de `__all__`. Control total sobre qué expone la API; `id`, `created_at` y `updated_at` marcados como `read_only`.
 - **Separación `validate_status()` / `validate()`.** El primero valida el valor del campo individual; el segundo valida reglas que dependen del estado actual del objeto (transiciones de status).
 - **`GenericViewSet` con mixins mínimos** en vez de `ModelViewSet`. Solo se exponen los métodos que el contrato de la API necesita (GET, POST, PATCH), evitando endpoints innecesarios.
 - **Autenticación deshabilitada** intencionalmente para esta prueba. En producción sería imprescindible implementar auth y permisos.

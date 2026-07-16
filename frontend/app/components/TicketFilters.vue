@@ -1,5 +1,12 @@
 <script setup lang="ts">
-const model = defineModel<any>()
+import { statusOptions, priorityOptions } from '~/helpers/ticket'
+
+interface TicketFilterModel {
+  status: string
+  priority: string
+}
+
+const model = defineModel<TicketFilterModel>()
 const props = defineProps<{ disabled?: boolean }>()
 const emit = defineEmits(['change'])
 
@@ -8,18 +15,18 @@ watch(model, () => emit('change'), { deep: true })
 
 <template>
   <div class="filters">
-    <select v-model="model.status" :disabled="disabled">
+    <select v-model="model?.status" :disabled="disabled">
       <option value="">Todos los estados</option>
-      <option value="open">Abierto</option>
-      <option value="in_progress">En progreso</option>
-      <option value="closed">Cerrado</option>
+      <option v-for="opt in statusOptions" :key="opt.value" :value="opt.value">
+        {{ opt.label }}
+      </option>
     </select>
 
-    <select v-model="model.priority" :disabled="disabled">
+    <select v-model="model?.priority" :disabled="disabled">
       <option value="">Todas las prioridades</option>
-      <option value="low">Baja</option>
-      <option value="medium">Media</option>
-      <option value="high">Alta</option>
+      <option v-for="opt in priorityOptions" :key="opt.value" :value="opt.value">
+        {{ opt.label }}
+      </option>
     </select>
   </div>
 </template>
