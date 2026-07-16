@@ -93,9 +93,3 @@ docker compose exec backend python manage.py test tickets
 - PostgreSQL como base de datos en Docker (SQLite es suficiente para el alcance de esta prueba)
 - Tests e2e (Playwright o similar)
 - Pipeline de CI con linting y tests automáticos
-
-## Notas
-
-- La autenticación y CSRF están deshabilitadas en la API para simplificar el desarrollo y testing de esta prueba. En producción sería imprescindible implementarlas.
-- Se usa `docker compose up` como único comando de arranque, incluyendo `migrate` automático al iniciar el contenedor del backend.
-- El frontend usa un proxy de Vite para redirigir `/api` al backend, configurado via variable de entorno `NUXT_API_PROXY_TARGET` para que funcione tanto en local como en Docker.
