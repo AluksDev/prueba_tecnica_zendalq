@@ -1,4 +1,5 @@
 from django.db.models import Count
+from rest_framework.permissions import AllowAny
 
 from rest_framework.viewsets import GenericViewSet
 from rest_framework.mixins import (
@@ -22,6 +23,9 @@ class TicketViewSet(
     queryset = Ticket.objects.all()
     serializer_class = TicketSerializer
     http_method_names = ["get", "post", "patch"]
+
+    authentication_classes = []   
+    permission_classes = [AllowAny] 
 
     def get_queryset(self):
         queryset = super().get_queryset()
