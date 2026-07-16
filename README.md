@@ -68,6 +68,7 @@ Esto levanta ambos servicios. No debería hacer falta ningún paso adicional.
 - **Proxy de Vite** para redirigir `/api` al backend. Evita CORS en desarrollo y refleja la arquitectura real (reverse proxy en producción). Configurable via `NUXT_API_PROXY_TARGET` para funcionar en local y en Docker.
 - **`<select>` para cambiar estado** Permite al usuario intentar cualquier transición, demostrando el flujo completo de validación: el frontend envía la petición, el backend rechaza transiciones inválidas y el usuario ve el error en un toast. Esto demuestra que la validación de negocio está correctamente implementada en ambos extremos.
 - **Helpers compartidos** (`helpers/ticket.ts`) para labels y colores, evitando duplicación entre componentes.
+- **Tipado de errores API** con dos interfaces separadas: `FetchError` (el wrapper de ofetch, solo en `useApi`) y `ApiError` (el body de respuesta DRF con `detail` y arrays por campo). Los catch blocks usan `as` en vez de `any` para mantener type safety sin dependencias de runtime.
 
 **Docker:**
 
@@ -91,5 +92,6 @@ docker compose exec backend python manage.py test tickets
 - Autenticación y permisos (ahora deshabilitados intencionalmente)
 - Paginación en el listado de tickets
 - PostgreSQL como base de datos en Docker (SQLite es suficiente para el alcance de esta prueba)
+- Interceptor centralizado en `useApi` para manejo de token de autenticación y errores de red/timeout de forma uniforme, una vez se añada autenticación
 - Tests e2e (Playwright o similar)
 - Pipeline de CI con linting y tests automáticos
