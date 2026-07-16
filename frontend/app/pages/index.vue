@@ -35,7 +35,7 @@ onMounted(fetchTickets)
   <div>
     <h1>Tickets</h1>
 
-    <!-- <TicketFilters v-model="filters" @change="fetchTickets" /> -->
+    <TicketFilters v-model="filters" @change="fetchTickets" />
     
     <TicketForm @created="fetchTickets" /> 
 
