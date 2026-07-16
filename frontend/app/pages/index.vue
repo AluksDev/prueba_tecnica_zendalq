@@ -4,7 +4,7 @@ import type { Ticket } from '~/models/ticket'
 const { getTickets, createTicket, updateTicket } = useTickets()
 
 const tickets = ref<Ticket[]>([])
-const loading = ref(false)
+const loading = ref<boolean>(false)
 const error = ref<string | null>(null)
 
 const filters = ref({

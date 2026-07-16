@@ -6,12 +6,15 @@ const emit = defineEmits(['update'])
 
 const { updateTicket } = useTickets()
 
+const loading = ref<boolean>(false)
+
 const changeStatus = async (ticket: Ticket) => {
+  loading.value = true
   try {
     const nextStatusMap: Record<TicketStatus, TicketStatus> = {
       open: 'in_progress',
       in_progress: 'closed',
-      closed: 'open',
+      closed: 'in_progress',
     }
 
     const next = (nextStatusMap[ticket.status] || 'open') as TicketStatus
@@ -20,6 +23,8 @@ const changeStatus = async (ticket: Ticket) => {
     emit('update')
   } catch (e: any) {
     alert(e.data?.detail || 'Error al actualizar el estado')
+  } finally {
+    loading.value = false
   }
 }
 </script>
@@ -30,7 +35,10 @@ const changeStatus = async (ticket: Ticket) => {
     <p>{{ t.priority }} - {{ t.status }}</p>
     <small>{{ t.created_at }}</small>
 
-    <button @click="changeStatus(t)">
+    <button 
+      @click="changeStatus(t)"
+      :disabled="loading"
+    >
       Cambiar estado
     </button>
   </div>
