@@ -11,7 +11,7 @@ from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from .models import Ticket
-from .serializer import TicketSerializer
+from .serializers import TicketSerializer
 
 
 class TicketViewSet(

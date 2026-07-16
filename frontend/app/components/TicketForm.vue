@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import type { TicketPriority, TicketStatus } from '~/models/ticket'
 import type { ApiError } from '~/models/error'
+import { priorityOptions } from '~/helpers/ticket'
 
 const emit = defineEmits(['created'])
 const { createTicket } = useTickets()
@@ -49,9 +50,9 @@ const submit = async () => {
     <textarea v-model="description" placeholder="Descripción" :disabled="loading" />
     <div class="row">
       <select v-model="priority" :disabled="loading">
-        <option value="low">Baja</option>
-        <option value="medium">Media</option>
-        <option value="high">Alta</option>
+        <option v-for="opt in priorityOptions" :key="opt.value" :value="opt.value">
+          {{ opt.label }}
+        </option>
       </select>
       <select v-model="status" :disabled="loading">
         <option value="open">Abierto</option>

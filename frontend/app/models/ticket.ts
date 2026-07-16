@@ -9,12 +9,17 @@ export interface Ticket {
   priority: TicketPriority
   status: TicketStatus
   created_at: string
+  updated_at: string
 }
 
 export interface TicketCreate {
   title: string
   description?: string
   priority?: TicketPriority
+  status?: TicketStatus
+}
+
+export interface TicketUpdate {
   status?: TicketStatus
 }
 
