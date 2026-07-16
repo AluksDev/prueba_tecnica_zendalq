@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { Ticket, TicketStatus } from '~/models/ticket'
+import type { ApiError } from '~/models/error'
 import { statusLabels, statusColors, priorityLabels } from '~/helpers/ticket'
 
 const props = defineProps<{ ticket: Ticket }>()
@@ -34,9 +35,10 @@ const changeStatus = async (e: Event) => {
     await updateTicket(props.ticket.id, { status: newStatus })
     toast.success('Estado actualizado')
     emit('update')
-  } catch (e: any) {
-    console.error('Error al cambiar el estado', e)
-    toast.error(e.status?.[0] || 'Error al cambiar el estado')
+  } catch (e) {
+    const error = e as ApiError
+    console.error('Error al cambiar el estado', error)
+    toast.error(error.status?.[0] || 'Error al cambiar el estado')
     localStatus.value = previousStatus
   } finally {
     loading.value = false

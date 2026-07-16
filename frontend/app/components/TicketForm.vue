@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import type { TicketPriority, TicketStatus } from '~/models/ticket'
+import type { ApiError } from '~/models/error'
 
 const emit = defineEmits(['created'])
 const { createTicket } = useTickets()
@@ -32,9 +33,10 @@ const submit = async () => {
     status.value = 'open'
     toast.success('Ticket creado')
     emit('created')
-  } catch (e: any) {
-    console.error('Error al crear el ticket', e)
-    toast.error('Error al crear el ticket')
+  } catch (e) {
+    const error = e as ApiError
+    console.error('Error al crear el ticket', error)
+    toast.error(error.detail || 'Error al crear el ticket')
   } finally {
     loading.value = false
   }
