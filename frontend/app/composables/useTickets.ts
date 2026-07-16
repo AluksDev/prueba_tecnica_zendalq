@@ -1,10 +1,13 @@
-import type { Ticket, TicketCreate } from '~/models/ticket'
+import type { Ticket, TicketCreate, TicketStats } from '~/models/ticket'
 
 export const useTickets = () => {
   const { request } = useApi()
 
   const getTickets = (params: Record<string, string> = {}): Promise<Ticket[]> =>
     request('/tickets/', { query: params })
+
+  const getStats = (): Promise<TicketStats[]> =>
+    request('/tickets/stats/')
 
   const createTicket = (data: TicketCreate): Promise<Ticket> =>
     request('/tickets/', { method: 'POST', body: data })
@@ -14,6 +17,7 @@ export const useTickets = () => {
 
   return {
     getTickets,
+    getStats,
     createTicket,
     updateTicket
   }
