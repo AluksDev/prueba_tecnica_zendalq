@@ -4,7 +4,7 @@ Aplicación mínima de gestión de incidencias (tickets) construida con Django R
 
 ## Stack
 
-- **Backend:** Django 6 + Django REST Framework, Poetry, SQLite
+- **Backend:** Django 6 + Django REST Framework, Poetry, PostgreSQL
 - **Frontend:** Nuxt 4, Vue 3, pnpm
 - **Infra:** Docker Compose
 
@@ -56,7 +56,7 @@ Esto levanta ambos servicios. No debería hacer falta ningún paso adicional.
 **Backend:**
 
 - **`TextChoices` para choice fields.** Garantiza valores válidos y permite referenciarlos como constantes (`Ticket.Status.OPEN`) en lugar de strings mágicos, mejorando legibilidad y mantenibilidad.
-- **Campos explícitos en el serializer** en vez de `__all__`. Control total sobre qué expone la API; `id` y `created_at` marcados como `read_only`.
+- **Campos explícitos en el serializer** en vez de `__all__`. Control total sobre qué expone la API; `id`, `created_at` y `updated_at` marcados como `read_only`.
 - **Separación `validate_status()` / `validate()`.** El primero valida el valor del campo individual; el segundo valida reglas que dependen del estado actual del objeto (transiciones de status).
 - **`GenericViewSet` con mixins mínimos** en vez de `ModelViewSet`. Solo se exponen los métodos que el contrato de la API necesita (GET, POST, PATCH), evitando endpoints innecesarios.
 - **Autenticación deshabilitada** intencionalmente para esta prueba. En producción sería imprescindible implementar auth y permisos.
@@ -68,6 +68,7 @@ Esto levanta ambos servicios. No debería hacer falta ningún paso adicional.
 - **Proxy de Vite** para redirigir `/api` al backend. Evita CORS en desarrollo y refleja la arquitectura real (reverse proxy en producción). Configurable via `NUXT_API_PROXY_TARGET` para funcionar en local y en Docker.
 - **`<select>` para cambiar estado** Permite al usuario intentar cualquier transición, demostrando el flujo completo de validación: el frontend envía la petición, el backend rechaza transiciones inválidas y el usuario ve el error en un toast. Esto demuestra que la validación de negocio está correctamente implementada en ambos extremos.
 - **Helpers compartidos** (`helpers/ticket.ts`) para labels y colores, evitando duplicación entre componentes.
+- **Tipado de errores API** con dos interfaces separadas: `FetchError` (el wrapper de ofetch, solo en `useApi`) y `ApiError` (el body de respuesta DRF con `detail` y arrays por campo). Los catch blocks usan `as` en vez de `any` para mantener type safety sin dependencias de runtime.
 
 **Docker:**
 
@@ -90,6 +91,7 @@ docker compose exec backend python manage.py test tickets
 
 - Autenticación y permisos (ahora deshabilitados intencionalmente)
 - Paginación en el listado de tickets
-- PostgreSQL como base de datos en Docker (SQLite es suficiente para el alcance de esta prueba)
+- Paginación en el endpoint de estadísticas (actualmente devuelve todos los agrupamientos sin límite)
+- Interceptor centralizado en `useApi` para manejo de token de autenticación y errores de red/timeout de forma uniforme, una vez se añada autenticación
 - Tests e2e (Playwright o similar)
 - Pipeline de CI con linting y tests automáticos

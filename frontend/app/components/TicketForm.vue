@@ -1,5 +1,7 @@
 <script setup lang="ts">
 import type { TicketPriority, TicketStatus } from '~/models/ticket'
+import type { ApiError } from '~/models/error'
+import { priorityOptions } from '~/helpers/ticket'
 
 const emit = defineEmits(['created'])
 const { createTicket } = useTickets()
@@ -7,7 +9,7 @@ const toast = useToast()
 
 const title = ref<string>('')
 const description = ref<string>('')
-const priority = ref<TicketPriority>('low')
+const priority = ref<TicketPriority>('medium')
 const status = ref<TicketStatus>('open')
 const loading = ref<boolean>(false)
 
@@ -32,9 +34,10 @@ const submit = async () => {
     status.value = 'open'
     toast.success('Ticket creado')
     emit('created')
-  } catch (e: any) {
-    console.error('Error al crear el ticket', e)
-    toast.error('Error al crear el ticket')
+  } catch (e) {
+    const error = e as ApiError
+    console.error('Error al crear el ticket', error)
+    toast.error(error.detail || 'Error al crear el ticket')
   } finally {
     loading.value = false
   }
@@ -47,9 +50,9 @@ const submit = async () => {
     <textarea v-model="description" placeholder="Descripción" :disabled="loading" />
     <div class="row">
       <select v-model="priority" :disabled="loading">
-        <option value="low">Baja</option>
-        <option value="medium">Media</option>
-        <option value="high">Alta</option>
+        <option v-for="opt in priorityOptions" :key="opt.value" :value="opt.value">
+          {{ opt.label }}
+        </option>
       </select>
       <select v-model="status" :disabled="loading">
         <option value="open">Abierto</option>
