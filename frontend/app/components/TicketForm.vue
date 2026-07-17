@@ -9,7 +9,7 @@ const toast = useToast()
 
 const title = ref<string>('')
 const description = ref<string>('')
-const priority = ref<TicketPriority>('low')
+const priority = ref<TicketPriority>('medium')
 const status = ref<TicketStatus>('open')
 const loading = ref<boolean>(false)
 

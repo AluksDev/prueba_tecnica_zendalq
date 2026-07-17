@@ -91,7 +91,7 @@ docker compose exec backend python manage.py test tickets
 
 - Autenticación y permisos (ahora deshabilitados intencionalmente)
 - Paginación en el listado de tickets
-- PostgreSQL como base de datos en Docker (SQLite es suficiente para el alcance de esta prueba)
+- Paginación en el endpoint de estadísticas (actualmente devuelve todos los agrupamientos sin límite)
 - Interceptor centralizado en `useApi` para manejo de token de autenticación y errores de red/timeout de forma uniforme, una vez se añada autenticación
 - Tests e2e (Playwright o similar)
 - Pipeline de CI con linting y tests automáticos
