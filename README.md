@@ -90,8 +90,8 @@ docker compose exec backend python manage.py test tickets
 ## Qué dejaría para una segunda iteración
 
 - Autenticación y permisos (ahora deshabilitados intencionalmente)
+- Usar Gunicorn o Uvicorn en producción en lugar del servidor de desarrollo de Django
 - Paginación en el listado de tickets
-- Paginación en el endpoint de estadísticas (actualmente devuelve todos los agrupamientos sin límite)
 - Interceptor centralizado en `useApi` para manejo de token de autenticación y errores de red/timeout de forma uniforme, una vez se añada autenticación
 - Tests e2e (Playwright o similar)
 - Pipeline de CI con linting y tests automáticos
